@@ -14,7 +14,8 @@ class Bulk_Page {
 	 * @return [type] [description]
 	 */
 	public function plugin_page() {
-		$action = isset($_GET['action']) ? $_GET['action'] : 'list';
+		
+		$action = isset($_GET['action']) ? sanitize_key( $_GET['action'] ) : 'list';
 
 		switch ($action) {
 			case 'new':

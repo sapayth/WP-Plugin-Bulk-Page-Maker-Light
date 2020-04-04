@@ -102,8 +102,19 @@ class Pages_List extends \WP_List_Table {
         ];
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
-            $args['orderby'] = $_REQUEST['orderby'];
-            $args['order']   = $_REQUEST['order'] ;
+        	$allowed_keys = ['orderby', 'order'];
+
+        	$orderby = sanitize_key( $_REQUEST['orderby'] );
+        	$order = sanitize_key( $_REQUEST['order'] );
+
+        	if( in_array($orderby, $allowed_keys, true) ) {
+        		$args['orderby'] = $_REQUEST['orderby'];
+        	}
+
+        	if( in_array($order, $allowed_keys, true) ) {
+        		$args['order']   = $_REQUEST['order'] ;
+        	}            
+            
         }
 
 		$this->items = bpm_get_pages( $args );
