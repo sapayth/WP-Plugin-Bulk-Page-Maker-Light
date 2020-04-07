@@ -84,8 +84,8 @@ final class Bulk_Page_Maker {
 /**
 * initialize the main plugin
 */
-function make_page() {
+function bpmaker_make_page() {
     return Bulk_Page_Maker::init();
 }
 
-make_page();
+bpmaker_make_page();

@@ -78,7 +78,7 @@ class Bulk_Page {
 		    );
 
 			$insert_id = wp_insert_post( $postarr );
-			$second_insert_id = bpm_insert_pages_info([
+			$second_insert_id = bpmaker_insert_pages_info([
 				'page_id'    => $insert_id,
 			]);
 

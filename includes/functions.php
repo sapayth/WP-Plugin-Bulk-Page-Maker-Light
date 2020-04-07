@@ -5,7 +5,7 @@
  * @param  array  $args [description]
  * @return int
  */
-function bpm_insert_pages_info( $args = [] ) {
+function bpmaker_insert_pages_info( $args = [] ) {
 	global $wpdb;
 
 	$defaults = [
@@ -36,7 +36,7 @@ function bpm_insert_pages_info( $args = [] ) {
  * @param  array  $args
  * @return array
  */
-function bpm_get_pages( $args = [] ) {
+function bpmaker_get_pages( $args = [] ) {
 	global $wpdb;
 
 	$defaults = [
@@ -65,7 +65,7 @@ function bpm_get_pages( $args = [] ) {
  * get total number of page created
  * @return int
  */
-function bpm_get_pages_count() {
+function bpmaker_get_pages_count() {
 	global $wpdb;
 
 	return (int) $wpdb->get_var( "SELECT count(id) FROM {$wpdb->prefix}bpm_pages" );
@@ -76,7 +76,7 @@ function bpm_get_pages_count() {
  * @param  int $id [description]
  * @return object
  */
-function bpm_get_page( $id ) {
+function bpmaker_get_page( $id ) {
 	global $wpdb;
 
 	return $wpdb->get_row(
@@ -89,7 +89,7 @@ function bpm_get_page( $id ) {
  * @param  int $post_id
  * @return int|bool
  */
-function bpm_delete_page( $post_id ) {
+function bpmaker_delete_page( $post_id ) {
 	global $wpdb;
 
 	// delete from posts db

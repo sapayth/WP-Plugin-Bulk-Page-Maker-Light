@@ -108,18 +108,18 @@ class Pages_List extends \WP_List_Table {
         	$order = sanitize_key( $_REQUEST['order'] );
 
         	if( in_array($orderby, $allowed_keys, true) ) {
-        		$args['orderby'] = $_REQUEST['orderby'];
+        		$args['orderby'] = $orderby;
         	}
 
         	if( in_array($order, $allowed_keys, true) ) {
-        		$args['order']   = $_REQUEST['order'] ;
+        		$args['order']   = $order;
         	}            
             
         }
 
-		$this->items = bpm_get_pages( $args );
+		$this->items = bpmaker_get_pages( $args );
 		$this->set_pagination_args( [
-			'total_items' => bpm_get_pages_count(),
+			'total_items' => bpmaker_get_pages_count(),
 			'per_page'    => $per_page,
 		] );
 	}
