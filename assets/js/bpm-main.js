@@ -1,11 +1,5 @@
 function init() {
 	document.getElementById('cmb_post_type').onchange = typeChangeHandler;
-
-	var pageCmb = document.getElementById('page_id');
-	var opt = new Option('No Parent');
-	opt.setAttribute('class', 'level-0');
-	pageCmb.insertBefore(opt, pageCmb.firstChild);
-	pageCmb.selectedIndex = 0;
 }
 
 function typeChangeHandler() {

@@ -16,6 +16,10 @@ class Installer {
 		$this->create_tables();
 	}
 
+	/**
+	 * adding the version in db
+	 * @return void
+	 */
 	public function add_version() {
 		// check if the plugin is installed before
         $installed = get_option( 'bpm_installed' );
@@ -45,12 +49,10 @@ class Installer {
 			PRIMARY KEY (`id`)
 			) $charset_collate";
 
-		if( !function_exists( 'dbDelta' ) ) {
+		if( ! function_exists( 'dbDelta' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 
-		dbDelta($schema);
+		dbDelta( $schema );
 	}
-
 }
-
