@@ -3,12 +3,13 @@
 namespace Bulk\Page\Maker;
 
 /**
- * 
+ * The installer class to handle install and uninstall operations
  */
 class Installer {
 
 	/**
-	 * run the installer
+	 * Run the installer
+     *
 	 * @return void
 	 */
 	public function run() {
@@ -17,14 +18,15 @@ class Installer {
 	}
 
 	/**
-	 * adding the version in db
+	 * Adding the version in db
+     *
 	 * @return void
 	 */
 	public function add_version() {
 		// check if the plugin is installed before
         $installed = get_option( 'bpm_installed' );
 
-        if( !$installed ) {
+        if ( ! $installed ) {
             // if not installed before, save the activation time in db
             update_option( 'BPM_INSTALLED', time() );
         }
@@ -33,13 +35,13 @@ class Installer {
 	}
 
 	/**
-	 * create necessary table
+	 * Create necessary table
+     *
 	 * @return void
 	 */
 	public function create_tables() {
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
-
 
 		$schema = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}bpm_pages` ( 
 			`id` INT(11) unsigned NOT NULL AUTO_INCREMENT ,
@@ -49,7 +51,7 @@ class Installer {
 			PRIMARY KEY (`id`)
 			) $charset_collate";
 
-		if( ! function_exists( 'dbDelta' ) ) {
+		if ( ! function_exists( 'dbDelta' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 

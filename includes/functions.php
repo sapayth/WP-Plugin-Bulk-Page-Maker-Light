@@ -1,19 +1,16 @@
 <?php
 
 /**
- * insert newly generated pages info
+ * Insert newly generated pages info
  * @param  array  $args [description]
- * @return int
+ * @return int|WP_Error
  */
 function bpmaker_insert_pages_info( $args = [] ) {
 	global $wpdb;
 
-	$transient_posts = 'bpmaker_all_pages';
-	$transient_count = 'bpmaker_pages_count';
-
 	$defaults = [
 		'created_by' => get_current_user_id(),
-		'created_at' => current_time('mysql'),
+		'created_at' => current_time( 'mysql' ),
 	];
 
 	$data = wp_parse_args( $args, $defaults );
@@ -27,31 +24,20 @@ function bpmaker_insert_pages_info( $args = [] ) {
 		]
 	);
 
-	if( ! $inserted ) {
-		return new \WP_Error( 'failed-to-insert', __('Failed to insert data', 'bulk-page-maker') );
-	}
-
-	// delete releated transient
-	if ( false !== get_transient( $transient_count ) ) {
-		delete_transient( $transient_count );
-	}
-
-	// delete releated transient
-	if ( false !== get_transient( $transient_posts ) ) {
-		delete_transient( $transient_posts );
+	if ( ! $inserted ) {
+		return new \WP_Error( 'failed-to-insert', __( 'Failed to insert data', 'sh-bpm-light' ) );
 	}
 
 	return $wpdb->insert_id;
 }
 
 /**
- * return pages
+ * Return all bulk pages
  * @param  array  $args
  * @return array
  */
 function bpmaker_get_pages( $args = [] ) {
 	global $wpdb;
-	$transient = 'bpmaker_all_pages';
 
 	$defaults = [
 		'numbers' => 20,
@@ -66,38 +52,33 @@ function bpmaker_get_pages( $args = [] ) {
 		"SELECT bpm.*, wp.post_title, wp.post_type, wp.post_date
 		FROM {$wpdb->prefix}bpm_pages bpm, {$wpdb->prefix}posts wp
 		WHERE bpm.page_id = wp.id
-		ORDER BY {$args['orderby']} {$args['order']}
+		ORDER BY %s %s
 		LIMIT %d, %d",
-		$args['offset'], $args['numbers']
+        $args['orderby'],
+        $args['order'],
+		$args['offset'],
+        $args['numbers']
 	);
 
-	// store pages in a transient
-	if ( false === ( $items = get_transient( $transient ) ) ) {
-		$items = $wpdb->get_results( $sql );
-		set_transient( $transient, $items, MONTH_IN_SECONDS );
-	}
+	$items = $wpdb->get_results( $sql );
 
 	return $items;
 }
 
 /**
- * get total number of page created
+ * Get total number of page created
  * @return int
  */
 function bpmaker_get_pages_count() {
 	global $wpdb;
-	$transient = 'bpmaker_pages_count';
 
-	if ( false === ( $count = get_transient( $transient ) ) ) {
-		$count = (int) $wpdb->get_var( "SELECT count(id) FROM {$wpdb->prefix}bpm_pages" );
-		set_transient( $transient, $count, MONTH_IN_SECONDS );
-	}
+	$count = (int) $wpdb->get_var( "SELECT count(id) FROM {$wpdb->prefix}bpm_pages" );
 
 	return $count;
 }
 
 /**
- * get selected page
+ * Get selected page
  * @param  int $id [description]
  * @return object
  */
@@ -110,24 +91,12 @@ function bpmaker_get_page( $id ) {
 }
 
 /**
- * delete page
+ * Delete page
  * @param  int $post_id
  * @return int|bool
  */
 function bpmaker_delete_page( $post_id ) {
 	global $wpdb;
-	$transient_posts = 'bpmaker_all_pages';
-	$transient_count = 'bpmaker_pages_count';
-
-	// delete releated transient
-	if ( false !== get_transient( $transient_count ) ) {
-		delete_transient( $transient_count );
-	}
-
-	// delete releated transient
-	if ( false !== get_transient( $transient_posts ) ) {
-		delete_transient( $transient_posts );
-	}
 
 	// delete from posts table
 	$wpdb->delete(
@@ -135,7 +104,7 @@ function bpmaker_delete_page( $post_id ) {
 		[ 'id' => $post_id ],
 		[ '%d' ]
 	);
-	
+
 	// delete from plugin table
 	return $wpdb->delete(
 		$wpdb->prefix . 'bpm_pages',
